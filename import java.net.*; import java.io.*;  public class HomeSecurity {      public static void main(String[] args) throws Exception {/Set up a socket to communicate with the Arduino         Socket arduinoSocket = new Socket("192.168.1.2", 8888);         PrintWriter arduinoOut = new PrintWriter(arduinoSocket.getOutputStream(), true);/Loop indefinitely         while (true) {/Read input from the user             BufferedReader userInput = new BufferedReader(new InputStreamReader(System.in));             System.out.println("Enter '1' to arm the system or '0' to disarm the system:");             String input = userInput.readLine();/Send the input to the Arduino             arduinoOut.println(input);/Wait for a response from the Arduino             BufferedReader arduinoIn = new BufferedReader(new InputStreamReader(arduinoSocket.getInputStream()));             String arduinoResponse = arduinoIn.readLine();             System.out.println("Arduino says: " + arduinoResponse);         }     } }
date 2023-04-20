@@ -1,0 +1,29 @@
+import java.net.*;
+import java.io.*;
+
+public class HomeSecurity {
+
+    public static void main(String[] args) throws Exception {
+        
+        // Set up a socket to communicate with the Arduino
+        Socket arduinoSocket = new Socket("192.168.1.2", 8888);
+        PrintWriter arduinoOut = new PrintWriter(arduinoSocket.getOutputStream(), true);
+        
+        // Loop indefinitely
+        while (true) {
+            
+            // Read input from the user
+            BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
+            System.out.println("Enter '1' to arm the system or '0' to disarm the system:");
+            String input = userInput.readLine();
+            
+            // Send the input to the Arduino
+            arduinoOut.println(input);
+            
+            // Wait for a response from the Arduino
+            BufferedReader arduinoIn = new BufferedReader(new InputStreamReader(arduinoSocket.getInputStream()));
+            String arduinoResponse = arduinoIn.readLine();
+            System.out.println("Arduino says: " + arduinoResponse);
+        }
+    }
+}
